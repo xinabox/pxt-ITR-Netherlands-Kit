@@ -10,7 +10,11 @@
         "main.blocks",
         "main.ts",
         "parallel.h",
-        "parallel.cpp"
+        "parallel.cpp",
+        "sg35.h",
+        "sg35.cpp",
+        "ix03.h",
+        "ix03.cpp"
     ],
     "testFiles": [
         "test.ts"
