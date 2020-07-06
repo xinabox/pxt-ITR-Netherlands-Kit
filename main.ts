@@ -244,6 +244,10 @@ namespace XK05Adv
 
     // CW01 function call end
 
+    // OD01 function call start
+    init_od01()
+    // OD01 function call end
+
      /**
      * draw / refresh screen
      */
@@ -257,6 +261,21 @@ namespace XK05Adv
     function cmd1(d: number) {
         let n = d % 256;
         pins.i2cWriteNumber(_I2CAddr, n, NumberFormat.UInt16BE);
+    }
+
+    function cmd2(d1: number, d2: number) {
+        _buf3[0] = 0;
+        _buf3[1] = d1;
+        _buf3[2] = d2;
+        pins.i2cWriteBuffer(_I2CAddr, _buf3);
+    }
+
+    function cmd3(d1: number, d2: number, d3: number) {
+        _buf4[0] = 0;
+        _buf4[1] = d1;
+        _buf4[2] = d2;
+        _buf4[3] = d3;
+        pins.i2cWriteBuffer(_I2CAddr, _buf4);
     }
 
     function set_pos(col: number = 0, page: number = 0) {
@@ -288,6 +307,47 @@ namespace XK05Adv
             _screen[0] = 0x40
             draw(1)
         }
+    }
+
+    /**
+     * clear screen
+     */
+    //% blockId="OLED12864_I2C_CLEAR" block="OD01 clear display"
+    //% weight=85 blockGap=8
+    //% group="Scrolling Display"
+    export function clear() {
+        _cx = _cy = 0
+        _screen.fill(0)
+        _screen[0] = 0x40
+        draw(1)
+    }
+
+    /**
+     * power up the OD01. OD01 is initialised by default on startup. 
+     */
+    // % blockId="OLED12864_I2C_init" block="start OD01"
+    // % weight=5 blockGap=8
+    function init_od01() {
+        cmd1(0xAE)       // SSD1306_DISPLAYOFF
+        cmd1(0xA4)       // SSD1306_DISPLAYALLON_RESUME
+        cmd2(0xD5, 0xF0) // SSD1306_SETDISPLAYCLOCKDIV
+        cmd2(0xA8, 0x3F) // SSD1306_SETMULTIPLEX
+        cmd2(0xD3, 0x00) // SSD1306_SETDISPLAYOFFSET
+        cmd1(0 | 0x0)    // line #SSD1306_SETSTARTLINE
+        cmd2(0x8D, 0x14) // SSD1306_CHARGEPUMP
+        cmd2(0x20, 0x00) // SSD1306_MEMORYMODE
+        cmd3(0x21, 0, 127) // SSD1306_COLUMNADDR
+        cmd3(0x22, 0, 63)  // SSD1306_PAGEADDR
+        cmd1(0xa0 | 0x1) // SSD1306_SEGREMAP
+        cmd1(0xc8)       // SSD1306_COMSCANDEC
+        cmd2(0xDA, 0x12) // SSD1306_SETCOMPINS
+        cmd2(0x81, 0xCF) // SSD1306_SETCONTRAST
+        cmd2(0xd9, 0xF1) // SSD1306_SETPRECHARGE
+        cmd2(0xDB, 0x40) // SSD1306_SETVCOMDETECT
+        cmd1(0xA6)       // SSD1306_NORMALDISPLAY
+        cmd2(0xD6, 0)    // zoom off
+        cmd1(0xAF)       // SSD1306_DISPLAYON
+        clear()
     }
 
     /**
@@ -922,7 +982,7 @@ namespace XK05Adv
         return;
     }
 
-    function init() {
+    function init_sg34() {
         if (initialized) return;
         initialized = true;
 
@@ -939,7 +999,7 @@ namespace XK05Adv
     //% group="SG35"
     //% draggableParameters=reporter
     export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
-        init();
+        init_sg34();
         onReceivedDataHandler = cb
     }
 
