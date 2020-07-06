@@ -216,13 +216,13 @@ namespace XK05Adv
 
     // SG35 function call start
 
-    begin()
+    //begin()
     
     // SG35 function call end
 
     // CW01 function call start
 
-    serial.redirect(SerialPin.P1, SerialPin.P0, 115200)
+    /*serial.redirect(SerialPin.P1, SerialPin.P0, 115200)
     serial.setRxBufferSize(200)
 
     basic.showIcon(IconNames.Chessboard)
@@ -238,7 +238,7 @@ namespace XK05Adv
     basic.pause(300)
     serial.readString();
     serial.writeString("AT+CWHOSTNAME?" + cw01_vars.NEWLINE);
-    basic.pause(1000)
+    basic.pause(1000)*/
 
     read_and_set_name();
 
