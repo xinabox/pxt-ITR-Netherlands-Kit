@@ -191,6 +191,11 @@ namespace XK05Adv
 
     // SN01 Variables end
 
+    // SG35 Variables start
+    let initialized = false
+    let onReceivedDataHandler: (pm1: number, pm25: number, pm10: number) => void;
+    // SG35 Variables end
+
     // SW01 function call start
 
         setreg(0xF2, 0x04) // set Humidity oversampling to x8
@@ -885,20 +890,23 @@ namespace XK05Adv
         return true
     }
 
-
+    //%block="SG35 PM1"
     //%shim=sg35::pm1
+    //%group="SG35"
     export function pm1(): number {
         return 1
     }
 
-
+    //%block="SG35 PM25"
     //%shim=sg35::pm25
+    //%group="SG35"
     export function pm25(): number {
         return 1
     }
 
-
+    //%block="SG35 PM10"
     //%shim=sg35::pm10
+    //%group="SG35"
     export function pm10(): number {
         return 1
     }
@@ -922,6 +930,7 @@ namespace XK05Adv
     }
 
     //% block="SG35 on received "
+    //% group="SG35"
     //% draggableParameters=reporter
     export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
         init();
