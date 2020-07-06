@@ -214,6 +214,12 @@ namespace XK05Adv
 
     // SN01 function call end
 
+    // SG35 function call start
+
+    begin()
+    
+    // SG35 function call end
+
     // CW01 function call start
 
     serial.redirect(SerialPin.P1, SerialPin.P0, 115200)
