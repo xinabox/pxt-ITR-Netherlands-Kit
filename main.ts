@@ -5,6 +5,19 @@ enum USER {
         EDUCATIONAL = 2
 }
 
+enum Measuremode {
+    //% block="IDLE"
+    MODE_IDLE = 0x00,
+    //% block="1SEC"
+    MODE_1SEC = 0x10,
+    //% block="10SEC"
+    MODE_10SEC = 0x20,
+    //% block="60SEC"
+    MODE_60SEC = 0x30,
+    //% block="250MS"
+    MODE_250MS = 0x40
+}
+
 //% color=190 weight=100 icon="\uf0c2" block="XinaBox Netherland Kit"
 namespace ITR
 {
@@ -219,6 +232,14 @@ namespace ITR
     begin()
     
     // SG35 function call end
+
+    // SG33 function call start
+
+     writereg(0xF4)
+     disableInterrupt();
+     setDriveMode(Measuremode.MODE_1SEC);
+
+    // SG33 function call end
 
     // CW01 function call start
 
@@ -525,6 +546,22 @@ namespace ITR
         if (dataAvailable()) {
             getAlgorithmResults();
         }
+    }
+
+    function writereg(dat: number): void {
+        pins.i2cWriteNumber(SG33_ADDR, dat, NumberFormat.UInt8BE);
+    }
+
+   function disableInterrupt() {
+        let meas_mode = getreg(0x01);
+        meas_mode &= ~(1 << 3);
+        setreg(0x01, meas_mode);
+    }
+
+    function setDriveMode(u: Measuremode): void {
+        let meas_mode = getreg(0x01);
+        meas_mode &= 0x0C;
+        setreg(0x01, meas_mode | u);
     }
 
      /**
@@ -945,6 +982,17 @@ namespace ITR
             serial.writeString("AT+CWHOSTNAME=\"CW01\"" + cw01_vars.NEWLINE)
             basic.pause(1000)
             control.reset()
+
+            if(name.includes("ESP") || name.includes("CW01"))
+            {
+
+                if (!(name.includes("CW01"))) {
+                    serial.writeString("AT+CWHOSTNAME=\"CW01\"" + cw01_vars.NEWLINE)
+                    basic.pause(1000)
+                    control.reset()
+                }
+
+            }
         }
     }
         
