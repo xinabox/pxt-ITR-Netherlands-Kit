@@ -980,8 +980,6 @@ namespace ITR
 
         if (!(name.includes("CW01"))) {
             serial.writeString("AT+CWHOSTNAME=\"CW01\"" + cw01_vars.NEWLINE)
-            basic.pause(1000)
-            control.reset()
 
             if(name.includes("ESP") || name.includes("CW01"))
             {
