@@ -118,25 +118,25 @@ namespace ITR
     
     let SW01_ADDR = 0x76
 
-    let dig_T1 = getUInt16LE(0x88)
-    let dig_T2 = getInt16LE(0x8A)
-    let dig_T3 = getInt16LE(0x8C)
-    let dig_P1 = getUInt16LE(0x8E)
-    let dig_P2 = getInt16LE(0x90)
-    let dig_P3 = getInt16LE(0x92)
-    let dig_P4 = getInt16LE(0x94)
-    let dig_P5 = getInt16LE(0x96)
-    let dig_P6 = getInt16LE(0x98)
-    let dig_P7 = getInt16LE(0x9A)
-    let dig_P8 = getInt16LE(0x9C)
-    let dig_P9 = getInt16LE(0x9E)
-    let dig_H1 = getreg(0xA1)
-    let dig_H2 = getInt16LE(0xE1)
-    let dig_H3 = getreg(0xE3)
-    let a = getreg(0xE5)
-    let dig_H4 = (getreg(0xE4) << 4) + (a % 16)
-    let dig_H5 = (getreg(0xE6) << 4) + (a >> 4)
-    let dig_H6 = getInt8LE(0xE7)
+    let dig_T1 = getUInt16LE(0x88, SW01_ADDR)
+    let dig_T2 = getInt16LE(0x8A, SW01_ADDR)
+    let dig_T3 = getInt16LE(0x8C, SW01_ADDR)
+    let dig_P1 = getUInt16LE(0x8E, SW01_ADDR)
+    let dig_P2 = getInt16LE(0x90, SW01_ADDR)
+    let dig_P3 = getInt16LE(0x92, SW01_ADDR)
+    let dig_P4 = getInt16LE(0x94, SW01_ADDR)
+    let dig_P5 = getInt16LE(0x96, SW01_ADDR)
+    let dig_P6 = getInt16LE(0x98, SW01_ADDR)
+    let dig_P7 = getInt16LE(0x9A, SW01_ADDR)
+    let dig_P8 = getInt16LE(0x9C, SW01_ADDR)
+    let dig_P9 = getInt16LE(0x9E, SW01_ADDR)
+    let dig_H1 = getreg(0xA1, SW01_ADDR)
+    let dig_H2 = getInt16LE(0xE1, SW01_ADDR)
+    let dig_H3 = getreg(0xE3, SW01_ADDR)
+    let a = getreg(0xE5, SW01_ADDR)
+    let dig_H4 = (getreg(0xE4, SW01_ADDR) << 4) + (a % 16)
+    let dig_H5 = (getreg(0xE6, SW01_ADDR) << 4) + (a >> 4)
+    let dig_H6 = getInt8LE(0xE7, SW01_ADDR)
 
     let T = 0
     let P = 0
@@ -211,9 +211,9 @@ namespace ITR
 
     // SW01 function call start
 
-        setreg(0xF2, 0x04) // set Humidity oversampling to x8
-        setreg(0xF4, 0x2F) // set Pressure oversampling to x1
-        setreg(0xF5, 0x0C) // set time constant of the IIR filter to 250 ms
+        setreg(0xF2, 0x04, SW01_ADDR) // set Humidity oversampling to x8
+        setreg(0xF4, 0x2F, SW01_ADDR) // set Pressure oversampling to x1
+        setreg(0xF5, 0x0C, SW01_ADDR) // set time constant of the IIR filter to 250 ms
 
     // SW01 function call end
 
@@ -407,7 +407,7 @@ namespace ITR
     }
 
         function getSW01(): void {
-        let adc_T = (getreg(0xFA) << 12) + (getreg(0xFB) << 4) + (getreg(0xFC) >> 4)
+        let adc_T = (getreg(0xFA, SW01_ADDR) << 12) + (getreg(0xFB, SW01_ADDR) << 4) + (getreg(0xFC, SW01_ADDR) >> 4)
         let var1 = (((adc_T >> 3) - (dig_T1 << 1)) * dig_T2) >> 11
         let var2 = (((((adc_T >> 4) - dig_T1) * ((adc_T >> 4) - dig_T1)) >> 12) * dig_T3) >> 14
         let t = var1 + var2
@@ -421,14 +421,14 @@ namespace ITR
         var1 = ((32768 + var1) * dig_P1) >> 15
         if (var1 == 0)
             return; // avoid exception caused by division by zero
-        let adc_P = (getreg(0xF7) << 12) + (getreg(0xF8) << 4) + (getreg(0xF9) >> 4)
+        let adc_P = (getreg(0xF7, SW01_ADDR) << 12) + (getreg(0xF8, SW01_ADDR) << 4) + (getreg(0xF9, SW01_ADDR) >> 4)
         let _p = ((1048576 - adc_P) - (var2 >> 12)) * 3125
         //_p = Math.idiv(_p, var1) * 2;
         _p = _p/ var1 * 2;
         var1 = (dig_P9 * (((_p >> 3) * (_p >> 3)) >> 13)) >> 12
         var2 = (((_p >> 2)) * dig_P8) >> 13
         P = _p + ((var1 + var2 + dig_P7) >> 4)
-        let adc_H = (getreg(0xFD) << 8) + getreg(0xFE)
+        let adc_H = (getreg(0xFD, SW01_ADDR) << 8) + getreg(0xFE, SW01_ADDR)
         var1 = t - 76800
         var2 = (((adc_H << 14) - (dig_H4 << 20) - (dig_H5 * var1)) + 16384) >> 15
         var1 = var2 * (((((((var1 * dig_H6) >> 10) * (((var1 * dig_H3) >> 11) + 32768)) >> 10) + 2097152) * dig_H2 + 8192) >> 14)
@@ -482,37 +482,37 @@ namespace ITR
         return Math.round(x * 100) / 100
     }
 
-    function setreg(reg: number, dat: number): void {
+    function setreg(reg: number, dat: number, addr: number): void {
         let buf = pins.createBuffer(2);
         buf[0] = reg;
         buf[1] = dat;
-        pins.i2cWriteBuffer(SW01_ADDR, buf);
+        pins.i2cWriteBuffer(addr, buf);
     }
 
-    function getreg(reg: number): number {
-        pins.i2cWriteNumber(SW01_ADDR, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(SW01_ADDR, NumberFormat.UInt8BE);
+    function getreg(reg: number, addr: number): number {
+        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(addr, NumberFormat.UInt8BE);
     }
 
-    function getInt8LE(reg: number): number {
-        pins.i2cWriteNumber(SW01_ADDR, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(SW01_ADDR, NumberFormat.Int8LE);
+    function getInt8LE(reg: number, addr: number): number {
+        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(addr, NumberFormat.Int8LE);
     }
 
-    function getUInt16LE(reg: number): number {
-        pins.i2cWriteNumber(SW01_ADDR, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(SW01_ADDR, NumberFormat.UInt16LE);
+    function getUInt16LE(reg: number, addr: number): number {
+        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(addr, NumberFormat.UInt16LE);
     }
 
-    function getInt16LE(reg: number): number {
-        pins.i2cWriteNumber(SW01_ADDR, reg, NumberFormat.UInt8BE);
-        return pins.i2cReadNumber(SW01_ADDR, NumberFormat.Int16LE);
+    function getInt16LE(reg: number, addr: number): number {
+        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(addr, NumberFormat.Int16LE);
     }
 
-    function readBlock(reg: number, count: number): number[] {
+    function readBlock(reg: number, count: number, addr: number): number[] {
         let buf: Buffer = pins.createBuffer(count);
-        pins.i2cWriteNumber(SG33_ADDR, reg, NumberFormat.UInt8BE);
-        buf = pins.i2cReadBuffer(SG33_ADDR, count);
+        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+        buf = pins.i2cReadBuffer(addr, count);
 
         let tempbuf: number[] = [];
         for (let i: number = 0; i < count; i++) {
@@ -523,7 +523,7 @@ namespace ITR
 
     // checks if the SG33 has new data available
     function dataAvailable(): boolean {
-        let status = getreg(0x00);
+        let status = getreg(0x00, SG33_ADDR);
         let ready = (status & 1 << 3);
         if (!ready) {
             return false;
@@ -534,7 +534,7 @@ namespace ITR
     // get new data from registers
     function getAlgorithmResults(): void {
         //let buf = pins.createBuffer(8);
-        let buf: number[]= readBlock(0X02, 8);
+        let buf: number[]= readBlock(0X02, 8, SG33_ADDR);
         //buf = pins.i2cReadBuffer(SG33_ADDR, 8, false);
 
         eCO2_ = (buf[0] << 8) | (buf[1]);
@@ -553,15 +553,15 @@ namespace ITR
     }
 
    function disableInterrupt() {
-        let meas_mode = getreg(0x01);
+        let meas_mode = getreg(0x01, SG33_ADDR);
         meas_mode &= ~(1 << 3);
-        setreg(0x01, meas_mode);
+        setreg(0x01, meas_mode, SG33_ADDR);
     }
 
     function setDriveMode(u: Measuremode): void {
-        let meas_mode = getreg(0x01);
+        let meas_mode = getreg(0x01, SG33_ADDR);
         meas_mode &= 0x0C;
-        setreg(0x01, meas_mode | u);
+        setreg(0x01, meas_mode | u, SG33_ADDR);
     }
 
      /**
