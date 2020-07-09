@@ -19,7 +19,7 @@ enum Measuremode {
 }
 
 //% color=190 weight=100 icon="\uf0c2" block="XinaBox Netherland Kit"
-//% groups=["OD01", "SG33", "SG35", "SN01", "SW01", "Wifi-Common", "Wifi-Ubidots"]
+//% groups='["OD01", "SG33", "SG35", "SN01", "SW01", "Wifi-Common", "Wifi-Ubidots"]'
 namespace ITR
 {
 
