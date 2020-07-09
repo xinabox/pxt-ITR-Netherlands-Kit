@@ -19,6 +19,7 @@ enum Measuremode {
 }
 
 //% color=190 weight=100 icon="\uf0c2" block="XinaBox Netherland Kit"
+//% groups=['OD01', 'SG33', 'SG35', 'SN01', 'SW01', 'Wifi-Common', 'Wifi-Ubidots']
 namespace ITR
 {
 
@@ -337,7 +338,7 @@ namespace ITR
      */
     //% blockId="OLED12864_I2C_CLEAR" block="OD01 clear display"
     //% weight=85 blockGap=8
-    //% group="Scrolling Display"
+    //% group="OD01"
     export function clear() {
         _cx = _cy = 0
         _screen.fill(0)
