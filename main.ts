@@ -1036,6 +1036,7 @@ namespace ITR
 
     //% block="SG35 on received "
     //% draggableParameters=reporter
+    //% group="SG35"
     export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
         init_sg34()
         onReceivedDataHandler = cb
