@@ -1004,50 +1004,40 @@ namespace ITR
         return true
     }
 
-    //%block="SG35 PM1"
     //%shim=sg35::pm1
-    //%group="SG35"
     export function pm1(): number {
         return 1
     }
 
-    //%block="SG35 PM25"
     //%shim=sg35::pm25
-    //%group="SG35"
     export function pm25(): number {
         return 1
     }
 
-    //%block="SG35 PM10"
     //%shim=sg35::pm10
-    //%group="SG35"
     export function pm10(): number {
         return 1
     }
 
-    //%shim=sg35::onDataReceived
-    function onDataReceived(body: Action): void {
-        return;
-    }
-
     function init_sg34() {
-        if (initialized) return;
-        initialized = true;
 
-        onDataReceived(() => {
-            let rcv = read()
-            if (rcv) {
-                onReceivedDataHandler(pm1(), pm25(), pm10())
-            }
-            rcv = false
+        startParallel(function(){
+                while(true)
+                {
+                    let rcv = read()
+                    if(rcv)
+                    {
+                        onReceivedDataHandler(pm1(), pm25(), pm10())
+                    }
+                    basic.pause(1)
+                }
         })
     }
 
     //% block="SG35 on received "
-    //% group="SG35"
     //% draggableParameters=reporter
     export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
-        init_sg34();
+        init_sg34()
         onReceivedDataHandler = cb
     }
 
