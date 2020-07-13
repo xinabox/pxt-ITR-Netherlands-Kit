@@ -225,6 +225,7 @@ namespace ITR
 
     if(SN01_ACK)
     {
+        basic.showString("True")
         startParallel(function () {
             while (true) {
                 parseNMEA()
