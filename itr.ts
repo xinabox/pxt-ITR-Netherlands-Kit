@@ -180,6 +180,7 @@ namespace ITR
         MPH = 2
     }
 
+    let SN01_ACK: boolean
     let sentence_type = ""
     let j = 0
     let nmea_sentence = ""
@@ -219,12 +220,18 @@ namespace ITR
     // SW01 function call end
 
     // SN01 function call start
-    startParallel(function () {
-        while (true) {
-            parseNMEA()
-            basic.pause(10)
-        }
-    })
+
+    checkSN01()
+
+    if(SN01_ACK)
+    {
+        startParallel(function () {
+            while (true) {
+                parseNMEA()
+                basic.pause(10)
+            }
+        })
+    }
 
     // SN01 function call end
 
@@ -730,6 +737,28 @@ namespace ITR
                     temp_string += temp_char
                 }
             }
+        }
+
+    }
+
+    function checkSN01()
+    {
+        let i: number = 0
+        for(; i < 10; i++)
+        {
+        if(pins.i2cReadNumber(0x42, NumberFormat.Int8LE))
+            {
+            }else{
+
+                break
+            }
+            basic.pause(1)
+        }
+        if(i == 10)
+        {
+            SN01_ACK = true
+        }else{
+            SN01_ACK = false
         }
 
     }
