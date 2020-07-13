@@ -228,7 +228,7 @@ namespace ITR
         startParallel(function () {
             while (true) {
                 parseNMEA()
-                basic.pause(10)
+                basic.pause(1)
             }
         })
     }
