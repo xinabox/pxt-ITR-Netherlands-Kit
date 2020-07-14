@@ -666,6 +666,32 @@ namespace ITR
         return final_lon
     }
 
+    //% block="SN01 get date"
+    export function getDate(): string {
+        let date_str: string = ""
+        let date: number = raw_date
+        let dd: number = Math.trunc(date / 10000)
+        let mm: number = Math.trunc((date % 10000) / 100)
+        let yy: number = Math.trunc(date % 100)
+
+        date_str = dd.toString() + "/" + mm.toString() + "/" + yy.toString()
+
+        return date_str
+    }
+
+    //% block="SN01 get time"
+    export function getTime(): string {
+        let time_str: string = ""
+        let time: number = raw_time
+        let hh: number = Math.trunc(time / 10000)
+        let mm: number = Math.trunc((time % 10000) / 100)
+        let ss: number = Math.trunc(time % 100)
+
+        time_str = hh.toString() + ":" + mm.toString() + ":" + ss.toString()
+
+        return time_str
+    }
+
     function readBytes(): string {
         let byte: number
         let char: string
