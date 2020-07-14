@@ -667,6 +667,7 @@ namespace ITR
     }
 
     //% block="SN01 get date"
+    //%group="SN01"
     export function getDate(): string {
         let date_str: string = ""
         let date: number = raw_date
@@ -680,6 +681,7 @@ namespace ITR
     }
 
     //% block="SN01 get time"
+    //%group="SN01"
     export function getTime(): string {
         let time_str: string = ""
         let time: number = raw_time
