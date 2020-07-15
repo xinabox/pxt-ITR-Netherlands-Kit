@@ -210,6 +210,10 @@ namespace ITR
     let initialized = false
     let onReceivedDataHandler: (pm1: number, pm25: number, pm10: number) => void;
     // SG35 Variables end
+	
+	// IM01 variables start
+	let sdFlag=false
+	// IM01 variables end
 
     // SW01 function call start
 
@@ -1050,6 +1054,60 @@ namespace ITR
 
             }
         }
+    }
+	
+	//%block="IM01 overwrite file %u with %v"
+    //%u.defl="log.txt"
+    //%group="SD CARD"
+    export function overwriteFile(u: string, v: string): void {
+        if(sdFlag==false) {
+            createFolder("im01")
+            sdFlag=true
+        }
+        file("/sd/im01/" + u, v, "w")
+        return
+    }
+
+    //%block="IM01 append file %u with %v"
+    //%u.defl="log.txt"
+    //%group="SD CARD"
+    export function appendFile(u: string, v: string): void {
+        if(sdFlag==false) {
+            createFolder("im01")
+            sdFlag=true
+        }
+        file("/sd/im01/" + u, v, "a")
+        return
+    }
+
+    //%block="IM01 append file %u with line %v"
+    //%u.defl="log.txt"
+    //%group="SD CARD"
+    export function appendFileLine(u: string, v: string): void {
+        if(sdFlag==false) {
+            createFolder("im01")
+            sdFlag=true
+        }
+        file("/sd/im01/" + u, v + "\n", "a")
+        return
+    }
+
+
+    //%block="IM01 create folder %u"
+    function createFolder(u: string): void {
+        mkdir("/sd/" + u)
+        return;
+    }
+
+    //%shim=im01::_mkdir
+    function mkdir(u: string): void {
+        return
+    }
+
+
+    //%shim=im01::_file
+    function file(u: string, v: string, x: string): boolean {
+        return true
     }
         
     //%shim=sg35::begin
