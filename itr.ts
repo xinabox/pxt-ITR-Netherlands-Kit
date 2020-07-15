@@ -1060,10 +1060,6 @@ namespace ITR
     //%u.defl="log.txt"
     //%group="SD CARD"
     export function overwriteFile(u: string, v: string): void {
-        if(sdFlag==false) {
-            createFolder("im01")
-            sdFlag=true
-        }
         file("/sd/im01/" + u, v, "w")
         return
     }
@@ -1072,10 +1068,6 @@ namespace ITR
     //%u.defl="log.txt"
     //%group="SD CARD"
     export function appendFile(u: string, v: string): void {
-        if(sdFlag==false) {
-            createFolder("im01")
-            sdFlag=true
-        }
         file("/sd/im01/" + u, v, "a")
         return
     }
@@ -1084,23 +1076,7 @@ namespace ITR
     //%u.defl="log.txt"
     //%group="SD CARD"
     export function appendFileLine(u: string, v: string): void {
-        if(sdFlag==false) {
-            createFolder("im01")
-            sdFlag=true
-        }
         file("/sd/im01/" + u, v + "\n", "a")
-        return
-    }
-
-
-    //%block="IM01 create folder %u"
-    function createFolder(u: string): void {
-        mkdir("/sd/" + u)
-        return;
-    }
-
-    //%shim=im01::_mkdir
-    function mkdir(u: string): void {
         return
     }
 
