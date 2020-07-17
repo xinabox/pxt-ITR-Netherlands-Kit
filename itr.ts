@@ -596,7 +596,7 @@ namespace ITR
     {
         if(SN01_ACK)
         {
-            for(let i: number = 0; i < 1000; i++)
+            for(let i: number = 0; i < 2000; i++)
             {
                 parseNMEA()
             }
