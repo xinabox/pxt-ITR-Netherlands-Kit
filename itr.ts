@@ -227,16 +227,6 @@ namespace ITR
 
     checkSN01()
 
-    if(SN01_ACK)
-    {
-        startParallel(function () {
-            while (true) {
-                parseNMEA()
-                basic.pause(1)
-            }
-        })
-    }
-
     // SN01 function call end
 
     // SG35 function call start
@@ -602,6 +592,17 @@ namespace ITR
         return eCO2_;
     }
 
+    function pollSN01():void
+    {
+        if(SN01_ACK)
+        {
+            for(let i: number = 0; i < 1000; i++)
+            {
+                parseNMEA()
+            }
+        }
+    }
+
     //%block="SN01 is data valid"
     //%group="SN01"
     export function dataValid(): boolean {
@@ -615,6 +616,7 @@ namespace ITR
     //% block="SN01 get latitude %lat_format"
     //%group="SN01"
     export function getLat(lat_format: format): string {
+        pollSN01()
         let latitude: number = raw_lat
         let orient: string = raw_NS
         let degrees: number = Math.trunc(latitude / 100)
@@ -644,6 +646,7 @@ namespace ITR
     //% block="SN01 get longitude %lng_format"
     //%group="SN01"
     export function getLon(lon_format: format): string {
+        pollSN01()
         let longitude: number = raw_lon
         let orient: string = raw_EW
         let degrees: number = Math.trunc(longitude / 100)
@@ -673,6 +676,7 @@ namespace ITR
     //% block="SN01 get date"
     //%group="SN01"
     export function getDate(): string {
+        pollSN01()
         let date_str: string = ""
         let date: number = raw_date
         let dd: number = Math.trunc(date / 10000)
@@ -687,6 +691,7 @@ namespace ITR
     //% block="SN01 get time"
     //%group="SN01"
     export function getTime(): string {
+        pollSN01()
         let time_str: string = ""
         let time: number = raw_time
         let hh: number = Math.trunc(time / 10000)
@@ -1085,6 +1090,48 @@ namespace ITR
     function file(u: string, v: string, x: string): boolean {
         return true
     }
+
+    //% block="SG35 PM1"
+    //% group="SG35"
+    export function getPM1():number
+    {
+        let rcv = read()
+
+        if(rcv)
+        {
+            return pm1()
+        }else{
+            return 0
+        }
+    }
+
+    //% block="SG35 PM10"
+    //% group="SG35"
+    export function getPM10():number
+    {
+        let rcv = read()
+
+        if(rcv)
+        {
+            return pm10()
+        }else{
+            return 0
+        }
+    }
+
+    //% block="SG35 PM25"
+    //% group="SG35"
+    export function getPM25():number
+    {
+        let rcv = read()
+
+        if(rcv)
+        {
+            return pm25()
+        }else{
+            return 0
+        }
+    }
         
     //%shim=sg35::begin
     function begin(): void {
@@ -1109,29 +1156,6 @@ namespace ITR
     //%shim=sg35::pm10
     export function pm10(): number {
         return 1
-    }
-
-    function init_sg34() {
-
-        startParallel(function(){
-                while(true)
-                {
-                    let rcv = read()
-                    if(rcv)
-                    {
-                        onReceivedDataHandler(pm1(), pm25(), pm10())
-                    }
-                    basic.pause(1)
-                }
-        })
-    }
-
-    //% block="SG35 on received "
-    //% draggableParameters=reporter
-    //% group="SG35"
-    export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
-        init_sg34()
-        onReceivedDataHandler = cb
     }
 
     //% shim=parall::startParallel
