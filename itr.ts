@@ -19,7 +19,7 @@ enum Measuremode {
 }
 
 //% color=190 weight=100 icon="\uf0c2" block="XinaBox Netherland Kit"
-//% groups='["OD01", "SG33", "SG35", "SN01", "SW01", "SD CARD", "Wifi-Common", "Wifi-Ubidots"]'
+//% groups='["OD01", "SG33", "SG35", "SN01", "SW01", "SW07", "SD CARD", "Wifi-Common", "Wifi-Ubidots"]'
 namespace ITR
 {
 
@@ -145,6 +145,16 @@ namespace ITR
 
     // SW01 Variables end
 
+    // SW07 Variables start
+
+    let ADC_I2C_ADDRESS = 0x59
+    let ADC_REG_CONF = 0x02
+    let ADC_CONF_CYC_TIME_256 = 0x80
+    let ADC_REG_RESULT = 0x00
+    let voltage = 0.0
+
+    // SW07 Variables end
+
     // SG333 Variables start
 
     let SG33_ADDR = 0x5A
@@ -222,6 +232,12 @@ namespace ITR
         setreg(0xF5, 0x0C, SW01_ADDR) // set time constant of the IIR filter to 250 ms
 
     // SW01 function call end
+
+    // SW07 function call start
+
+        setreg(ADC_REG_CONF, ADC_CONF_CYC_TIME_256, ADC_I2C_ADDRESS)
+
+    // SW07 function call end
 
     // SN01 function call start
 
@@ -509,6 +525,11 @@ namespace ITR
     function getInt16LE(reg: number, addr: number): number {
         pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(addr, NumberFormat.Int16LE);
+    }
+
+    function getUInt16BE(reg: number, addr: number): number {
+        pins.i2cWriteNumber(addr, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(addr, NumberFormat.UInt16BE);
     }
 
     function readBlock(reg: number, count: number, addr: number): number[] {
@@ -1162,4 +1183,36 @@ namespace ITR
     export function startParallel(u: () => void) {
         return 1;
     }
+
+    function readVoltage()
+    {
+        let data: NumberFormat.UInt16LE;
+        let a: NumberFormat.UInt8LE
+        let b: NumberFormat.UInt8LE
+
+	    data = getUInt16BE(ADC_REG_RESULT, ADC_I2C_ADDRESS)
+
+	    a = (data & 0xFF00) >> 8
+	    b = (data & 0x00FF) >> 0
+
+	    voltage = ((((a & 0x0F)*256) + (b & 0xF0))/0x10)*(3.3/256);
+    }
+
+    function getVoltage()
+    {
+        readVoltage()
+        return voltage
+    }
+
+    //% blockId=getMoisture 
+    //% block="SW07 get moisture"
+    //% group="SW07"
+    export function getMoisture(): number
+    {
+        let value = getVoltage()
+        return pins.map(value, 0, 2.63, 0, 100)
+    }
+
+
+
 }
