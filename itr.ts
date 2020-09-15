@@ -899,11 +899,6 @@ namespace ITR
         cw01_vars.DEVICE_ID = ID
         cw01_vars.TOKEN = TKN
         en_doubleLink =  true
-        serial.writeString("AT+CIPMUX=1" + cw01_vars.NEWLINE)
-        basic.pause(100)
-        serial.writeString("AT+CIPSTART=0,\"TCP\",\"api.allthingstalk.io\",80" + cw01_vars.NEWLINE)
-        basic.pause(1000)
-        IoTMQTTConnect("api.allthingstalk.io", cw01_vars.TOKEN, "xinabox")
         basic.showLeds(`
         . . . . .
         . . . . .
@@ -911,6 +906,11 @@ namespace ITR
         . . . . .
         . . . . .
         `)
+        serial.writeString("AT+CIPMUX=1" + cw01_vars.NEWLINE)
+        basic.pause(100)
+        serial.writeString("AT+CIPSTART=0,\"TCP\",\"api.allthingstalk.io\",80" + cw01_vars.NEWLINE)
+        basic.pause(1000)
+        IoTMQTTConnect("api.allthingstalk.io", cw01_vars.TOKEN, "xinabox")
     }
 
 
@@ -1506,7 +1506,7 @@ namespace ITR
     function get_status(): boolean {
 
         basic.pause(400)
-        serial.writeString("AT+CIPRECVDATA=200" + cw01_vars.NEWLINE)
+        serial.writeString("AT+CIPRECVDATA=0,200" + cw01_vars.NEWLINE)
         basic.pause(300)
         cw01_vars.res = serial.readString()
 
