@@ -194,31 +194,6 @@ namespace ITR
 
     // SN01 Variables start
 
-    export enum format {
-        //% block=raw
-        RAW = 0,
-        //% block=DD
-        DD = 1,
-        //% block=DMS
-        DMS = 2
-    }
-
-    export enum orientation {
-        //% block=cardinal
-        cardinal = 0,
-        //% block=noncardinal
-        noncardinal = 1
-    }
-
-    export enum speed_format {
-        //% block=knots
-        KNOTS = 0,
-        //% block=KPH
-        KPH = 1,
-        //% block=MPH
-        MPH = 2
-    }
-
     let SN01_ACK: boolean
     let sentence_type = ""
     let j = 0
@@ -657,9 +632,9 @@ namespace ITR
         }
     }
 
-    //% block="SN01 get latitude %lat_format"
+    //% block="SN01 get latitude"
     //%group="SN01"
-    export function getLat(lat_format: format): string {
+    export function getLat(): string {
         pollSN01()
         let latitude: number = raw_lat
         let orient: string = raw_NS
@@ -667,54 +642,26 @@ namespace ITR
         let minutes: number = Math.trunc(latitude % 100)
         let seconds: number = ((((latitude) % 100) * 10000) % 10000) * 60 / 10000
         let DD: number = degrees + minutes / 60 + seconds / 3600
-        let final_lat: string = "-"
 
-        if (dataValid()) {
-            if (orient == "S" || orient == "s")
-                latitude = latitude * -1
-            if (lat_format == format.RAW) {
-                final_lat = latitude.toString()
-            }
-            else if (lat_format == format.DD) {
-                DD = latitude > 0 ? DD : DD * -1
-                final_lat = DD.toString()
-            }else if(lat_format == format.DMS)
-            {
-                final_lat = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
-            }
-        }
+        DD = latitude > 0 ? DD : DD * -1
 
-        return final_lat
+        return DD.toString()
     }
 
-    //% block="SN01 get longitude %lng_format"
+    //% block="SN01 get longitude"
     //%group="SN01"
-    export function getLon(lon_format: format): string {
+    export function getLon(): string {
         pollSN01()
-        let longitude: number = raw_lon
+       let longitude: number = raw_lon
         let orient: string = raw_EW
         let degrees: number = Math.trunc(longitude / 100)
         let minutes: number = Math.trunc(longitude % 100)
         let seconds: number = ((((longitude) % 100) * 10000) % 10000) * 60 / 10000
         let DD: number = degrees + minutes / 60 + seconds / 3600
-        let final_lon: string = "-"
 
+        DD = longitude > 0 ? DD : DD * -1
 
-        if (dataValid()) {
-            if (orient == "W" || orient == "w")
-                longitude = longitude * -1
-            if (lon_format == format.RAW) {
-                final_lon = longitude.toString()
-            }else if (lon_format == format.DD) {
-                DD = longitude > 0 ? DD : DD * -1
-                final_lon = DD.toString()
-            }else if(lon_format == format.DMS)
-            {
-                final_lon = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
-            }
-        }
-
-        return final_lon
+        return DD.toString()
     }
 
     //% block="SN01 get date"
@@ -767,6 +714,8 @@ namespace ITR
                 sentence_type += readBytes()
                 j += 1
             }
+        }else{
+            return
         }
         if (sentence_type.compare("GPRMC") == 0) {
             sentence_type = ""
@@ -783,17 +732,14 @@ namespace ITR
                     raw_NS = GPRMC[3]
                     raw_lon = parseFloat(GPRMC[4])
                     raw_EW = GPRMC[5]
-                    raw_SOG = parseFloat(GPRMC[6])
-                    raw_CMG = parseFloat(GPRMC[7])
                     raw_date = parseFloat(GPRMC[8])
-                    raw_mag_var = parseFloat(GPRMC[9])
                     temp_string = ""
                     break
                 } else {
                     temp_string += temp_char
                 }
             }
-        } else if (sentence_type.compare("GPGGA") == 0) {
+        } /*else if (sentence_type.compare("GPGGA") == 0) {
             sentence_type = ""
             readBytes()
             let temp_char: string = ""
@@ -818,7 +764,7 @@ namespace ITR
                     temp_string += temp_char
                 }
             }
-        }
+        }*/
 
     }
 
