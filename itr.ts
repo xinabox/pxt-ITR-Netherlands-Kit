@@ -194,31 +194,6 @@ namespace ITR
 
     // SN01 Variables start
 
-    export enum format {
-        //% block=raw
-        RAW = 0,
-        //% block=DD
-        DD = 1,
-        //% block=DMS
-        DMS = 2
-    }
-
-    export enum orientation {
-        //% block=cardinal
-        cardinal = 0,
-        //% block=noncardinal
-        noncardinal = 1
-    }
-
-    export enum speed_format {
-        //% block=knots
-        KNOTS = 0,
-        //% block=KPH
-        KPH = 1,
-        //% block=MPH
-        MPH = 2
-    }
-
     let SN01_ACK: boolean
     let sentence_type = ""
     let j = 0
@@ -657,9 +632,9 @@ namespace ITR
         }
     }
 
-    //% block="SN01 get latitude %lat_format"
+    //% block="SN01 get latitude"
     //%group="SN01"
-    export function getLat(lat_format: format): string {
+    export function getLat(): string {
         pollSN01()
         let latitude: number = raw_lat
         let orient: string = raw_NS
@@ -673,9 +648,9 @@ namespace ITR
         return DD.toString()
     }
 
-    //% block="SN01 get longitude %lng_format"
+    //% block="SN01 get longitude"
     //%group="SN01"
-    export function getLon(lon_format: format): string {
+    export function getLon(): string {
         pollSN01()
        let longitude: number = raw_lon
         let orient: string = raw_EW
