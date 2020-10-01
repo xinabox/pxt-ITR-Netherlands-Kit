@@ -661,15 +661,15 @@ namespace ITR
     //%group="SN01"
     export function getLat(lat_format: format): string {
         pollSN01()
-        let latitude: number = raw_lat
+        /*let latitude: number = raw_lat
         let orient: string = raw_NS
         let degrees: number = Math.trunc(latitude / 100)
         let minutes: number = Math.trunc(latitude % 100)
         let seconds: number = ((((latitude) % 100) * 10000) % 10000) * 60 / 10000
-        let DD: number = degrees + minutes / 60 + seconds / 3600
+        let DD: number = degrees + minutes / 60 + seconds / 3600*/
         let final_lat: string = "-"
 
-        if (dataValid()) {
+        /*if (dataValid()) {
             if (orient == "S" || orient == "s")
                 latitude = latitude * -1
             if (lat_format == format.RAW) {
@@ -682,7 +682,7 @@ namespace ITR
             {
                 final_lat = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
             }
-        }
+        }*/
 
         return final_lat
     }
@@ -691,16 +691,16 @@ namespace ITR
     //%group="SN01"
     export function getLon(lon_format: format): string {
         pollSN01()
-        let longitude: number = raw_lon
+       /* let longitude: number = raw_lon
         let orient: string = raw_EW
         let degrees: number = Math.trunc(longitude / 100)
         let minutes: number = Math.trunc(longitude % 100)
         let seconds: number = ((((longitude) % 100) * 10000) % 10000) * 60 / 10000
-        let DD: number = degrees + minutes / 60 + seconds / 3600
+        let DD: number = degrees + minutes / 60 + seconds / 3600*/
         let final_lon: string = "-"
 
 
-        if (dataValid()) {
+        /*if (dataValid()) {
             if (orient == "W" || orient == "w")
                 longitude = longitude * -1
             if (lon_format == format.RAW) {
@@ -712,7 +712,7 @@ namespace ITR
             {
                 final_lon = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
             }
-        }
+        }*/
 
         return final_lon
     }
