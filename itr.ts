@@ -739,32 +739,7 @@ namespace ITR
                     temp_string += temp_char
                 }
             }
-        } /*else if (sentence_type.compare("GPGGA") == 0) {
-            sentence_type = ""
-            readBytes()
-            let temp_char: string = ""
-            while (true) {
-                temp_char = readBytes()
-                if ((temp_char.compare("\n") == 0) || (temp_char.compare("\r") == 0)) {
-                    basic.pause(100)
-                    GPGGA = helpers.stringSplit(temp_string, ",")
-                    raw_time = parseFloat(GPGGA[0])
-                    raw_lat = parseFloat(GPGGA[1])
-                    raw_NS = GPGGA[2]
-                    raw_lon = parseFloat(GPGGA[3])
-                    raw_EW = GPGGA[4]
-                    raw_GPS_quality = parseFloat(GPGGA[5])
-                    raw_sat = parseFloat(GPGGA[6])
-                    raw_hdop = parseFloat(GPGGA[7])
-                    raw_height = parseFloat(GPGGA[8])
-                    raw_geoid_sep = parseFloat(GPGGA[10])
-                    temp_string = ""
-                    break
-                } else {
-                    temp_string += temp_char
-                }
-            }
-        }*/
+        }
 
     }
 
