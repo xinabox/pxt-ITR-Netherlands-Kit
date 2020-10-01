@@ -1,6 +1,6 @@
 {
     "name": "pxt-itr-netherlandkit",
-    "version": "1.10.15",
+    "version": "1.10.6",
     "description": "",
     "dependencies": {
         "core": "*"
