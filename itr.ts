@@ -691,16 +691,16 @@ namespace ITR
     //%group="SN01"
     export function getLon(lon_format: format): string {
         pollSN01()
-       /* let longitude: number = raw_lon
+       let longitude: number = raw_lon
         let orient: string = raw_EW
         let degrees: number = Math.trunc(longitude / 100)
         let minutes: number = Math.trunc(longitude % 100)
         let seconds: number = ((((longitude) % 100) * 10000) % 10000) * 60 / 10000
-        let DD: number = degrees + minutes / 60 + seconds / 3600*/
+        let DD: number = degrees + minutes / 60 + seconds / 3600
         let final_lon: string = "-"
 
 
-        /*if (dataValid()) {
+        if (dataValid()) {
             if (orient == "W" || orient == "w")
                 longitude = longitude * -1
             if (lon_format == format.RAW) {
@@ -712,7 +712,7 @@ namespace ITR
             {
                 final_lon = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
             }
-        }*/
+        }
 
         return final_lon
     }
@@ -767,6 +767,8 @@ namespace ITR
                 sentence_type += readBytes()
                 j += 1
             }
+        }else{
+            return
         }
         if (sentence_type.compare("GPRMC") == 0) {
             sentence_type = ""
@@ -783,10 +785,7 @@ namespace ITR
                     raw_NS = GPRMC[3]
                     raw_lon = parseFloat(GPRMC[4])
                     raw_EW = GPRMC[5]
-                    raw_SOG = parseFloat(GPRMC[6])
-                    raw_CMG = parseFloat(GPRMC[7])
                     raw_date = parseFloat(GPRMC[8])
-                    raw_mag_var = parseFloat(GPRMC[9])
                     temp_string = ""
                     break
                 } else {
