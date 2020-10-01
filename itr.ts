@@ -697,24 +697,10 @@ namespace ITR
         let minutes: number = Math.trunc(longitude % 100)
         let seconds: number = ((((longitude) % 100) * 10000) % 10000) * 60 / 10000
         let DD: number = degrees + minutes / 60 + seconds / 3600
-        let final_lon: string = "-"
 
+        DD = longitude > 0 ? DD : DD * -1
 
-        if (dataValid()) {
-            if (orient == "W" || orient == "w")
-                longitude = longitude * -1
-            if (lon_format == format.RAW) {
-                final_lon = longitude.toString()
-            }else if (lon_format == format.DD) {
-                DD = longitude > 0 ? DD : DD * -1
-                final_lon = DD.toString()
-            }else if(lon_format == format.DMS)
-            {
-                final_lon = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
-            }
-        }
-
-        return final_lon
+        return DD.toString()
     }
 
     //% block="SN01 get date"
