@@ -793,7 +793,7 @@ namespace ITR
                     temp_string += temp_char
                 }
             }
-        } else if (sentence_type.compare("GPGGA") == 0) {
+        } /*else if (sentence_type.compare("GPGGA") == 0) {
             sentence_type = ""
             readBytes()
             let temp_char: string = ""
@@ -818,7 +818,7 @@ namespace ITR
                     temp_string += temp_char
                 }
             }
-        }
+        }*/
 
     }
 
