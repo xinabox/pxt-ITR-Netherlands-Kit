@@ -661,30 +661,16 @@ namespace ITR
     //%group="SN01"
     export function getLat(lat_format: format): string {
         pollSN01()
-        /*let latitude: number = raw_lat
+        let latitude: number = raw_lat
         let orient: string = raw_NS
         let degrees: number = Math.trunc(latitude / 100)
         let minutes: number = Math.trunc(latitude % 100)
         let seconds: number = ((((latitude) % 100) * 10000) % 10000) * 60 / 10000
-        let DD: number = degrees + minutes / 60 + seconds / 3600*/
-        let final_lat: string = "-"
+        let DD: number = degrees + minutes / 60 + seconds / 3600
 
-        /*if (dataValid()) {
-            if (orient == "S" || orient == "s")
-                latitude = latitude * -1
-            if (lat_format == format.RAW) {
-                final_lat = latitude.toString()
-            }
-            else if (lat_format == format.DD) {
-                DD = latitude > 0 ? DD : DD * -1
-                final_lat = DD.toString()
-            }else if(lat_format == format.DMS)
-            {
-                final_lat = degrees.toString() + "d" + minutes.toString() + "\'" + seconds.toString() + "\"" + orient
-            }
-        }*/
+        DD = latitude > 0 ? DD : DD * -1
 
-        return final_lat
+        return DD.toString()
     }
 
     //% block="SN01 get longitude %lng_format"
