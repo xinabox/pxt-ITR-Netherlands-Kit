@@ -1488,48 +1488,6 @@ namespace ITR
         return true
     }
 
-    //% block="SG35 PM1"
-    //% group="SG35"
-    export function getPM1():number
-    {
-        let rcv = read()
-
-        if(rcv)
-        {
-            return pm1()
-        }else{
-            return 0
-        }
-    }
-
-    //% block="SG35 PM10"
-    //% group="SG35"
-    export function getPM10():number
-    {
-        let rcv = read()
-
-        if(rcv)
-        {
-            return pm10()
-        }else{
-            return 0
-        }
-    }
-
-    //% block="SG35 PM25"
-    //% group="SG35"
-    export function getPM25():number
-    {
-        let rcv = read()
-
-        if(rcv)
-        {
-            return pm25()
-        }else{
-            return 0
-        }
-    }
-        
     //%shim=sg35::begin
     function begin(): void {
         return
@@ -1540,25 +1498,57 @@ namespace ITR
         return true
     }
 
+
     //%shim=sg35::pm1
     export function pm1(): number {
         return 1
     }
+
 
     //%shim=sg35::pm25
     export function pm25(): number {
         return 1
     }
 
+
     //%shim=sg35::pm10
     export function pm10(): number {
         return 1
+    }
+
+    //%shim=sg35::onDataReceived
+    function onDataReceived(body: Action): void {
+        return;
+    }
+
+    function init() {
+
+        startParallel(function(){
+                while(true)
+                {
+                    let rcv = read()
+                    if(rcv)
+                    {
+                        onReceivedDataHandler(pm1(), pm25(), pm10())
+                    }
+                    basic.pause(1)
+                }
+        })
+    }
+
+    //% block="SG35 on received "
+    //% draggableParameters=reporter
+    export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
+        init()
+        onReceivedDataHandler = cb
     }
 
     //% shim=parall::startParallel
     export function startParallel(u: () => void) {
         return 1;
     }
+
+    begin()
 
 
 }
