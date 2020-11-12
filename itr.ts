@@ -1537,6 +1537,7 @@ namespace ITR
     }
 
     //% block="SG35 on received "
+    //% group="SG35"
     //% draggableParameters=reporter
     export function onReceivedData(cb: (receivedPM1: number,receivedPM25: number,receivedPM10: number) => void): void {
         init()
